@@ -43,7 +43,9 @@ dependencies:
   mobile_scanner: ^5.1.0
   qr_flutter: ^4.1.0
   timer_count_down: ^2.2.2
-  vector_graphics: ^1.1.11+1
+  # vector_graphics: ^1.1.11+1
+  http: ^1.2.1
+  dartz: ^0.10.1
   
 
 dev_dependencies:
