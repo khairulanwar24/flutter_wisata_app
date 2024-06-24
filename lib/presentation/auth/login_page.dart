@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_wisata_app/presentation/auth/bloc/login/login_bloc.dart';
 import 'package:flutter_wisata_app/presentation/home/main_page.dart';
 
 import '../../core/core.dart';
@@ -53,11 +55,26 @@ class _LoginPageState extends State<LoginPage> {
                           obscureText: true,
                         ),
                         const SpaceHeight(86.0),
-                        Button.filled(
-                          onPressed: () {
-                            context.pushReplacement(const MainPage());
+                        BlocBuilder<LoginBloc, LoginState>(
+                          builder: (context, state) {
+                            state.maybeWhen(
+                                orElse: () {},
+                                success: (data) {
+                                  context.pushReplacement(const MainPage());
+                                });
+                            return Button.filled(
+                              onPressed: () {
+                                context.read<LoginBloc>().add(
+                                      LoginEvent.login(
+                                        email: emailController.text,
+                                        password: passwordController.text,
+                                      ),
+                                    );
+                                // context.pushReplacement(const MainPage());
+                              },
+                              label: 'Login',
+                            );
                           },
-                          label: 'Login',
                         ),
                         const SpaceHeight(128.0),
                         Center(
