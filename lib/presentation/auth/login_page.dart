@@ -55,26 +55,46 @@ class _LoginPageState extends State<LoginPage> {
                           obscureText: true,
                         ),
                         const SpaceHeight(86.0),
-                        BlocBuilder<LoginBloc, LoginState>(
-                          builder: (context, state) {
+                        BlocListener<LoginBloc, LoginState>(
+                          listener: (context, state) {
                             state.maybeWhen(
                                 orElse: () {},
                                 success: (data) {
                                   context.pushReplacement(const MainPage());
+                                },
+                                error: (error) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(error),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
                                 });
-                            return Button.filled(
-                              onPressed: () {
-                                context.read<LoginBloc>().add(
-                                      LoginEvent.login(
-                                        email: emailController.text,
-                                        password: passwordController.text,
-                                      ),
-                                    );
-                                // context.pushReplacement(const MainPage());
-                              },
-                              label: 'Login',
-                            );
                           },
+                          child: BlocBuilder<LoginBloc, LoginState>(
+                            builder: (context, state) {
+                              return state.maybeWhen(
+                                orElse: () {
+                                  return Button.filled(
+                                    onPressed: () {
+                                      context.read<LoginBloc>().add(
+                                            LoginEvent.login(
+                                              email: emailController.text,
+                                              password: passwordController.text,
+                                            ),
+                                          );
+                                      // context.pushReplacement(const MainPage());
+                                    },
+                                    label: 'Login',
+                                  );
+                                },
+                                loading: () {
+                                  return Center(
+                                      child: CircularProgressIndicator());
+                                },
+                              );
+                            },
+                          ),
                         ),
                         const SpaceHeight(128.0),
                         Center(
